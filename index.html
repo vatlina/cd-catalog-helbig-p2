@@ -26,7 +26,7 @@ button{padding:7px 12px;border:1px solid var(--accent);background:var(--accent);
 .wrap{padding:12px 20px 40px;/*overflow-x: auto;*/}
 table{border-collapse:collapse;width:100%;min-width:1500px;background:var(--card)}
 th,td{border:1px solid var(--line);padding:8px;vertical-align:top;text-align:left;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:normal}
-th{position: sticky;top: 60px;z-index: 10;background: var(--accent);color: #fff;font-weight: 600;font-size: 13px;box-shadow: 0 2px 2px -1px rgba(0,0,0,0.2);}
+th{position: sticky;top: 0px;z-index: 10;background: var(--accent);color: #fff;font-weight: 600;font-size: 13px;box-shadow: 0 2px 2px -1px rgba(0,0,0,0.2);}
 td.n{font-weight:700;text-align:center;font-size:14px}
 td.title-col{font-weight:700;font-size:14px}
 .thumbs{display:flex;flex-wrap:wrap;gap:4px;width:210px}
@@ -179,6 +179,28 @@ document.getElementById("lbp").onclick=e=>{e.stopPropagation();step(-1)};
 document.getElementById("lbn").onclick=e=>{e.stopPropagation();step(1)};
 lb.addEventListener("click",e=>{if(e.target===lb)lb.classList.remove("on")});
 document.addEventListener("keydown",e=>{if(!lb.classList.contains("on"))return;if(e.key==="Escape")lb.classList.remove("on");if(e.key==="ArrowLeft")step(-1);if(e.key==="ArrowRight")step(1);});
+// --- Автоматическая подстройка отступа для заголовков таблицы ---
+function adjustStickyHeader() {
+  const filtersBlock = document.querySelector('.filters');
+  const headers = document.querySelectorAll('th');
+  
+  if (filtersBlock && headers.length > 0) {
+    // Получаем реальную высоту блока фильтров
+    const filtersHeight = filtersBlock.offsetHeight;
+    
+    // Применяем эту высоту как отступ сверху для заголовков
+    headers.forEach(th => {
+      th.style.top = filtersHeight + 'px';
+    });
+  }
+}
+
+// Вызываем функцию при загрузке и при изменении размера окна
+window.addEventListener('load', adjustStickyHeader);
+window.addEventListener('resize', adjustStickyHeader);
+
+// Также вызываем её после рендера таблицы (так как заголовки могут пересоздаваться)
+// Для этого можно обернуть вызов render() или добавить в конец функции render()
 render();
 </script>
 </body>
